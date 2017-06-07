@@ -12,8 +12,10 @@ class Detector(object):
 
     def __init__(self, net, weight_file):
         self.net = net
-        self.weights_file = weight_file
-
+        if os.path.isdir(model_path):
+            self.weights_file = tf.train.latest_checkpoint(model_path)
+        else:
+            self.weights_file = weight_file
         self.classes = cfg.CLASSES
         self.num_class = len(self.classes)
         self.image_size = cfg.IMAGE_SIZE
@@ -178,8 +180,8 @@ def main():
     detector = Detector(yolo, weight_file)
 
     # detect from camera
-    # cap = cv2.VideoCapture(-1)
-    # detector.camera_detector(cap)
+    cap = cv2.VideoCapture(0)
+    detector.camera_detector(cap)
 
     # detect from image file
     imname = 'test/person.jpg'
